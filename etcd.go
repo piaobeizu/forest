@@ -2,10 +2,12 @@ package forest
 
 import (
 	"context"
-	"github.com/coreos/etcd/clientv3"
-	"github.com/coreos/etcd/mvcc/mvccpb"
+	"crypto/tls"
 	"log"
 	"time"
+
+	"github.com/coreos/etcd/clientv3"
+	"github.com/coreos/etcd/mvcc/mvccpb"
 )
 
 type Etcd struct {
@@ -17,15 +19,45 @@ type Etcd struct {
 }
 
 // create a etcd
-func NewEtcd(endpoints []string, timeout time.Duration) (etcd *Etcd, err error) {
+// func NewEtcd(endpoints []string, timeout time.Duration) (etcd *Etcd, err error) {
 
+// 	var (
+// 		client *clientv3.Client
+// 	)
+
+// 	conf := clientv3.Config{
+// 		Endpoints:   endpoints,
+// 		DialTimeout: timeout,
+// 	}
+// 	if client, err = clientv3.New(conf); err != nil {
+// 		return
+// 	}
+
+// 	etcd = &Etcd{
+
+// 		endpoints: endpoints,
+// 		client:    client,
+// 		kv:        clientv3.NewKV(client),
+// 		timeout:   timeout,
+// 	}
+
+// 	return
+// }
+
+// create a etcd
+func NewEtcd(endpoints []string, timeout time.Duration, tls *tls.Config) (etcd *Etcd, err error) {
 	var (
 		client *clientv3.Client
+		conf   clientv3.Config
 	)
 
-	conf := clientv3.Config{
+	conf = clientv3.Config{
 		Endpoints:   endpoints,
 		DialTimeout: timeout,
+	}
+
+	if tls != nil {
+		conf.TLS = tls
 	}
 	if client, err = clientv3.New(conf); err != nil {
 		return
