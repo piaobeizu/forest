@@ -9,7 +9,7 @@ import (
 
 func InitEtcd() *Etcd {
 
-	etcd, err := NewEtcd([]string{"127.0.0.1:2379"}, time.Second*5)
+	etcd, err := NewEtcd([]string{"127.0.0.1:2379"}, time.Second*5, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
